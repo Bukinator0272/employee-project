@@ -10,22 +10,9 @@ import java.util.List;
 public class EmployeeDAO {
 
     private Connection connection;
-    private static final String INSERT_INTO_EMPLOYEE = "INSERT INTO employee " +
-            "(employment_date, name, surname, department_id, position_id, manager_id)" +
-            "VALUES ((?), (?), (?), (?), (?), (?))";
-    private static final String[] INSERT_QUERIES = {
-            "INSERT INTO department (name) VALUES ((?))",
-            "INSERT INTO position (name) VALUES ((?))"
-    };
     private static final String[] SELECT_QUERIES = {
             "SELECT COUNT(*) FROM department",
-            "SELECT COUNT(*) FROM position",
-            "SELECT name FROM department WHERE department_id = (?)",
-            "SELECT name FROM position WHERE position_id = (?)",
-            "SELECT name, surname FROM employee WHERE employee_id = (?)",
-            "SELECT * FROM employee",
-            "SELECT employee_id FROM employee where employee_id = (?)",
-            "SELECT COUNT(*) FROM employee",
+            "SELECT COUNT(*) FROM position"
     };
 
     public EmployeeDAO() {
@@ -33,7 +20,7 @@ public class EmployeeDAO {
     }
 
     public void add(Employee employee) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_EMPLOYEE)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO employee (employment_date, name, surname, department_id, position_id, manager_id) VALUES ((?), (?), (?), (?), (?), (?))")) {
             if (checkManager(employee.getManager()) || crutch()) {
                 int[] infoId = addInfo(employee);
                 preparedStatement.setObject(1, Date.valueOf(employee.getEmploymentDate()));
@@ -54,7 +41,7 @@ public class EmployeeDAO {
     }
 
     private boolean checkManager(int id) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_QUERIES[6])) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT employee_id FROM employee where employee_id = (?)")) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
@@ -65,7 +52,7 @@ public class EmployeeDAO {
     }
 
     private boolean crutch() {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_QUERIES[7])) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM employee")) {
             ResultSet resultSet = preparedStatement.executeQuery();
             return !resultSet.next();
         } catch (SQLException e) {
@@ -77,7 +64,7 @@ public class EmployeeDAO {
     private int[] addInfo(Employee employee) {
         int[] infoId = new int[2];
         int tableCount = 0;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_QUERIES[tableCount])) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO department (name) VALUES ((?))")) {
             preparedStatement.setString(1, employee.getDepartment());
             preparedStatement.executeUpdate();
             infoId[tableCount] = getIdInfoId(tableCount);
@@ -85,7 +72,7 @@ public class EmployeeDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_QUERIES[tableCount])) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement( "INSERT INTO position (name) VALUES ((?))")) {
             preparedStatement.setString(1, employee.getPosition());
             preparedStatement.executeUpdate();
             infoId[tableCount] = getIdInfoId(tableCount);
@@ -109,7 +96,7 @@ public class EmployeeDAO {
 
     public List<Employee> getAll() {
         List<Employee> employees = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_QUERIES[5])) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement( "SELECT * FROM employee")) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 if (resultSet.getInt(7) > 0 && resultSet.getInt(7) < 1000) {
@@ -138,7 +125,7 @@ public class EmployeeDAO {
     }
 
     private String getDepartmentName(int id) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_QUERIES[2])) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT name FROM department WHERE department_id = (?)")) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -151,7 +138,7 @@ public class EmployeeDAO {
     }
 
     private String getPositionName(int id) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_QUERIES[3])) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT name FROM position WHERE position_id = (?)")) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -164,7 +151,7 @@ public class EmployeeDAO {
     }
 
     public String getManagersNameSurname(int id) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_QUERIES[4])) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement( "SELECT name, surname FROM employee WHERE employee_id = (?)")) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
