@@ -12,18 +12,19 @@
     Surname: <label>
     <input name="surname" type="text"/>
 </label>
+    <br><br>
     Department: <label>
     <input name="department" type="text"/>
 </label>
+    <br><br>
     Position: <label>
     <input name="position" type="text"/>
 </label>
-    Project name: <label>
-    <input name="projectName" type="text"/>
+    <br><br>
+    Manager id: <label>
+    <input name="manager" type="text"/>
 </label>
-    Cabinet number: <label>
-    <input name="cabinetNumber" type="text"/>
-</label>
+    <br><br>
     <input type="submit" value="Submit"/>
 </form>
 </body>

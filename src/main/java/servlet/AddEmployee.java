@@ -20,14 +20,23 @@ public class AddEmployee extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         EmployeeController employeeController = new EmployeeController();
-        employeeController.add(
-                req.getParameter("name"),
-                req.getParameter("surname"),
-                req.getParameter("department"),
-                req.getParameter("position"),
-                req.getParameter("projectName"),
-                Integer.parseInt(req.getParameter("cabinetNumber"))
-        );
+        if (req.getParameter("manager") == null || req.getParameter("manager").equals("")) {
+            employeeController.add(
+                    req.getParameter("name"),
+                    req.getParameter("surname"),
+                    req.getParameter("department"),
+                    req.getParameter("position"),
+                    0
+            );
+        } else {
+            employeeController.add(
+                    req.getParameter("name"),
+                    req.getParameter("surname"),
+                    req.getParameter("department"),
+                    req.getParameter("position"),
+                    Integer.parseInt(req.getParameter("manager"))
+            );
+        }
         getServletContext().getRequestDispatcher("/HomePage.jsp").forward(req, resp);
     }
 

@@ -10,17 +10,26 @@ public class Employee {
     private String surname;
     private String department;
     private String position;
-    private String projectName;
-    private int cabinetNumber;
+    private int manager;
 
-    public Employee(String name, String surname, String department, String position, String projectName, int cabinetNumber) {
+    public Employee() {
+    }
+
+    public Employee(String name, String surname, String department, String position) {
         this.employmentDate = LocalDate.now();
         this.name = name;
         this.surname = surname;
         this.department = department;
         this.position = position;
-        this.projectName = projectName;
-        this.cabinetNumber = cabinetNumber;
+    }
+
+    public Employee( String name, String surname, String department, String position, int manager) {
+        this.employmentDate = LocalDate.now();
+        this.name = name;
+        this.surname = surname;
+        this.department = department;
+        this.position = position;
+        this.manager = manager;
     }
 
     public int getId() {
@@ -71,20 +80,12 @@ public class Employee {
         this.position = position;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public int getManager() {
+        return manager;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public int getCabinetNumber() {
-        return cabinetNumber;
-    }
-
-    public void setCabinetNumber(int cabinetNumber) {
-        this.cabinetNumber = cabinetNumber;
+    public void setManager(int manager) {
+        this.manager = manager;
     }
 
 }

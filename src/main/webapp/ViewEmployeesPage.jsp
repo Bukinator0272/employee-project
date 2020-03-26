@@ -14,8 +14,7 @@
             <td>${employee.surname}</td>
             <td>${employee.department}</td>
             <td>${employee.position}</td>
-            <td>${employee.projectName}</td>
-            <td>${employee.cabinetNumber}</td>
+            <td>${employee.manager}</td>
         </tr>
     </c:forEach>
 </table>

@@ -17,8 +17,12 @@ public class EmployeeController {
         return employeeDAO.getAll();
     }
 
-    public void add(String name, String surname, String department, String position, String projectName, int cabinetNumber) {
-        employeeDAO.add(new Employee(name, surname, department, position, projectName, cabinetNumber));
+    public void add(String name, String surname, String department, String position, int Manager) {
+        if (Manager == 0) {
+            employeeDAO.add(new Employee(name, surname, department, position));
+        } else {
+            employeeDAO.add(new Employee(name, surname, department, position, Manager));
+        }
     }
 
 }
