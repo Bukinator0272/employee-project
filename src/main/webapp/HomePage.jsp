@@ -1,10 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Home</title>
+    <title>Home Page</title>
+    <link rel="stylesheet" href="css/HomePageStyle.css" type="text/css"/>
+    <meta charset="UTF-8">
 </head>
 <body>
-<a href="view-employees">View Employees</a>
+<div class="main">
+    <a href="view-employees" class="main__view">View Employees</a>
+</div>
 </body>
 </html>

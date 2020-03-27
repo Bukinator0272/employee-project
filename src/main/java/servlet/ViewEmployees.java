@@ -1,7 +1,7 @@
 package servlet;
 
 import controller.EmployeeController;
-import model.Employee;
+import model.entity.Employee;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +19,8 @@ public class ViewEmployees extends HttpServlet {
         EmployeeController employeeController = new EmployeeController();
         List<Employee> employees = employeeController.getAll();
         req.setAttribute("employees", employees);
+        String[] managersNameSurname = {};
+
         getServletContext().getRequestDispatcher("/ViewEmployeesPage.jsp").forward(req, resp);
     }
 
