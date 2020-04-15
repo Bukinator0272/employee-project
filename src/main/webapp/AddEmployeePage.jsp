@@ -6,29 +6,25 @@
     <meta charset="UTF-8">
 </head>
 <body>
-<div>
-    <form action="add-employee" method="post">
-        Name: <label>
-        <input name="name" type="text"/>
-    </label>
-        <br><br>
-        Surname: <label>
-        <input name="surname" type="text"/>
-    </label>
-        <br><br>
-        Department: <label>
-        <input name="department" type="text"/>
-    </label>
-        <br><br>
-        Position: <label>
-        <input name="position" type="text"/>
-    </label>
-        <br><br>
-        Manager id: <label>
-        <input name="manager" type="text"/>
-    </label>
-        <br><br>
-        <input type="submit" value="Submit"/>
+<div class="main">
+    <h1 class="text"> Enter Employee</h1>
+    <form class="form" action="add-employee" method="post">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Name">
+
+        <label for="surname">Surname</label>
+        <input type="text" id="surname" name="surname" placeholder="Surname">
+
+        <label for="department">Department</label>
+        <input type="text" id="department" name="department" placeholder="Department">
+
+        <label for="position">Position</label>
+        <input type="text" id="position" name="position" placeholder="Position">
+
+        <label for="manager">Manager</label>
+        <input type="text" id="manager" name="manager" placeholder="Manager">
+
+        <input class="submit_btn" type="submit" value="Submit">
     </form>
 </div>
 </body>

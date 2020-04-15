@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="main">
-    <a href="view-employees" class="main__view">View Employees</a>
+    <a href="view-employees" class="view">View Employees</a>
 </div>
 </body>
 </html>

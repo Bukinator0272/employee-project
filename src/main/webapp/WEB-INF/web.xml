@@ -7,11 +7,6 @@
         <welcome-file>HomePage.jsp</welcome-file>
     </welcome-file-list>
 
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.css</url-pattern>
-    </servlet-mapping>
-
     <resource-ref>
         <description>Connection</description>
         <res-ref-name>jdbc/register</res-ref-name>

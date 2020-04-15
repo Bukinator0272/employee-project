@@ -23,7 +23,7 @@ public class Employee {
         this.position = position;
     }
 
-    public Employee( String name, String surname, String department, String position, int manager) {
+    public Employee(String name, String surname, String department, String position, int manager) {
         this.employmentDate = LocalDate.now();
         this.name = name;
         this.surname = surname;

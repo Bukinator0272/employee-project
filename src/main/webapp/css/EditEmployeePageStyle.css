@@ -8,12 +8,32 @@ body {
     background-color: #f2f2f2;
     padding: 10px;
     border-radius: 8px;
+    display: flex;
+    flex-direction: column;
 }
 
-.text {
-    display: flex;
-    justify-content: center;
-    font-family: fantasy;
+.table {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif, serif;
+    font-size: 14px;
+    border-radius: 10px;
+    border-spacing: 0;
+    text-align: center;
+}
+
+th {
+    background: #BCEBDD;
+    color: black;
+    padding: 10px 20px;
+}
+
+td {
+    background-color: bisque;
+}
+
+th, td {
+    border-style: solid;
+    border-width: 0 1px 1px 0;
+    border-color: black;
 }
 
 .form {

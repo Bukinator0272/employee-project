@@ -38,24 +38,33 @@ public class EmployeeService implements EmployeeDAO {
     }
 
     @Override
-    public Employee read(int i) {
+    public Employee read(int id) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM employee WHERE employee_id = (?)")) {
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.getInt(7) > 0 && resultSet.getInt(7) < 1000) {
-                return new Employee(
-                        resultSet.getString("name"),
-                        resultSet.getString("surname"),
-                        getDepartmentName(resultSet.getInt("department_id")),
-                        getPositionName(resultSet.getInt("position_id")),
-                        resultSet.getInt("manager_id")
-                );
-            } else {
-                return new Employee(
-                        resultSet.getString("name"),
-                        resultSet.getString("surname"),
-                        getDepartmentName(resultSet.getInt("department_id")),
-                        getPositionName(resultSet.getInt("position_id"))
-                );
+            if (resultSet.next()) {
+                if (resultSet.getInt(7) > 0 && resultSet.getInt(7) < 1000) {
+                    Employee employee = new Employee(
+                            resultSet.getString("name"),
+                            resultSet.getString("surname"),
+                            getDepartmentName(resultSet.getInt("department_id")),
+                            getPositionName(resultSet.getInt("position_id")),
+                            resultSet.getInt("manager_id")
+                    );
+                    employee.setId(resultSet.getInt("employee_id"));
+                    employee.setEmploymentDate(resultSet.getDate("employment_date").toLocalDate());
+                    return employee;
+                } else {
+                    Employee employee = new Employee(
+                            resultSet.getString("name"),
+                            resultSet.getString("surname"),
+                            getDepartmentName(resultSet.getInt("department_id")),
+                            getPositionName(resultSet.getInt("position_id"))
+                    );
+                    employee.setId(resultSet.getInt("employee_id"));
+                    employee.setEmploymentDate(resultSet.getDate("employment_date").toLocalDate());
+                    return employee;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,20 +105,78 @@ public class EmployeeService implements EmployeeDAO {
 
     @Override
     public void update(Employee employee) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE employee SET name = (?) WHERE id = (?)")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE employee SET name = (?) WHERE employee_id = (?)")) {
             preparedStatement.setString(1, employee.getName());
             preparedStatement.setInt(2, employee.getId());
-            preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE employee SET surname = (?) WHERE employee_id = (?)")) {
+            preparedStatement.setString(1, employee.getSurname());
+            preparedStatement.setInt(2, employee.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        int[] departmentAndPositionIdUpdate = getDepartmentAndPositionId(employee.getId());
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE department SET name = (?) WHERE department_id = (?)")) {
+            preparedStatement.setString(1, employee.getDepartment());
+            preparedStatement.setInt(2, departmentAndPositionIdUpdate[0]);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE position SET name = (?) WHERE position_id = (?)")) {
+            preparedStatement.setString(1, employee.getPosition());
+            preparedStatement.setInt(2, departmentAndPositionIdUpdate[1]);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE employee SET manager_id = (?) WHERE employee_id = (?)")) {
+            preparedStatement.setInt(1, employee.getManager());
+            preparedStatement.setInt(2, employee.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int[] getDepartmentAndPositionId(int id) {
+        int[] departmentAndPositionId = new int[2];
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT department_id, position_id FROM employee WHERE employee_id = (?)")) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                departmentAndPositionId[0] = resultSet.getInt("department_id");
+                departmentAndPositionId[1] = resultSet.getInt("position_id");
+                return departmentAndPositionId;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return departmentAndPositionId;
     }
 
     @Override
     public void remove(int id) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM employee WHERE employee_id = (?)")) {
             preparedStatement.setInt(1, id);
-            preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        int[] departmentAndPositionIdRemove = getDepartmentAndPositionId(id);
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM department WHERE department_id = (?)")) {
+            preparedStatement.setInt(1, departmentAndPositionIdRemove[0]);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM position WHERE position_id = (?)")) {
+            preparedStatement.setInt(1, departmentAndPositionIdRemove[1]);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -159,7 +226,8 @@ public class EmployeeService implements EmployeeDAO {
 
     private int getIdInfoId(int tableCount) {
         String[] SELECT_QUERIES = {
-                "SELECT COUNT(*) FROM department", "SELECT COUNT(*) FROM position"
+                "SELECT COUNT(*) FROM department",
+                "SELECT COUNT(*) FROM position"
         };
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_QUERIES[tableCount])) {
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -199,13 +267,14 @@ public class EmployeeService implements EmployeeDAO {
         return null;
     }
 
-    //дернуть в сервлете
     public String getManagersNameSurname(int id) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT name, surname FROM employee WHERE employee_id = (?)")) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 return resultSet.getString(1) + " " + resultSet.getString(2);
+            } else {
+                return " ";
             }
         } catch (SQLException e) {
             e.printStackTrace();

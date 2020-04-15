@@ -1,10 +1,9 @@
 package controller;
 
-import model.entity.Employee;
 import model.dao.EmployeeDAO;
+import model.entity.Employee;
 import model.service.EmployeeService;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class EmployeeController {
@@ -13,6 +12,10 @@ public class EmployeeController {
 
     public EmployeeController() {
         this.employeeDAO = new EmployeeService();
+    }
+
+    public Employee get(int id) {
+        return employeeDAO.read(id);
     }
 
     public List<Employee> getAll() {
@@ -25,6 +28,14 @@ public class EmployeeController {
         } else {
             employeeDAO.add(new Employee(name, surname, department, position, managerId));
         }
+    }
+
+    public void update(Employee employee) {
+        employeeDAO.update(employee);
+    }
+
+    public void delete(int id) {
+        employeeDAO.remove(id);
     }
 
 }

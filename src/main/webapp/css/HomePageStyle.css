@@ -1,15 +1,24 @@
 .main {
-    margin: 50px;
+    margin: auto;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    width: 800px;
+    padding: 100px;
 }
 
-.main__view {
-    display: inline-block;
-    background: #8C959D;
-    color: #fff;
-    padding: 1rem 1.5rem;
+
+.view {
+    width: auto;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
     text-decoration: none;
-    border-radius: 3px;
+}
+
+.view:hover {
+    background-color: #45a049;
 }
