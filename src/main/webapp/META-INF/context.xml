@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
-    <Resource
-            name="jdbc/register"
-            type="javax.sql.DataSource"
-            username="postgres"
-            password="123"
-            driverClassName="org.postgresql.Driver"
-            url="jdbc:postgresql://localhost:5434/postgres"
-            maxTotal="-1"
-            maxIdle="10"
-            maxWaitMillis="5000">
-    </Resource>
-</Context>
+    <Resource name="jdbc/myoracle"
+              auth="Container"
+              type="javax.sql.DataSource"
+              driverClassName="oracle.jdbc.OracleDriver"
+              url="jdbc:oracle:thin:@127.0.0.1:1521:xe"
+              username="netcracker"
+              password="netcracker"
+              maxActive="50"
+              maxTotal="400"
+              maxIdle="300"
+              maxWait="10000"/>
 
+</Context>

@@ -1,41 +1,63 @@
 package controller;
 
-import model.dao.EmployeeDAO;
+import model.dao.DepartmentDAOImpl;
+import model.dao.EmployeeDAOImpl;
+import model.dao.PositionDAOImpl;
+import model.entity.Department;
 import model.entity.Employee;
-import model.service.EmployeeService;
+import model.entity.HierarchyEmployees;
+import model.entity.Position;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class EmployeeController {
 
-    private EmployeeDAO employeeDAO;
-
     public EmployeeController() {
-        this.employeeDAO = new EmployeeService();
     }
 
-    public Employee get(int id) {
-        return employeeDAO.read(id);
+    public Employee getEmployeeById(Long id) throws SQLException {
+        EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl();
+        Employee employee = employeeDAO.get(id, true);
+        return employee;
     }
 
-    public List<Employee> getAll() {
-        return employeeDAO.readAll();
+    public void saveEmployee(Employee employee) throws SQLException {
+        EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl();
+        employeeDAO.save(employee);
     }
 
-    public void add(String name, String surname, String department, String position, int managerId) {
-        if (managerId == 0) {
-            employeeDAO.add(new Employee(name, surname, department, position));
-        } else {
-            employeeDAO.add(new Employee(name, surname, department, position, managerId));
+    public void removeEmployee(Long id) throws SQLException {
+        if (id != null) {
+            EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl();
+            employeeDAO.delete(id);
         }
     }
 
-    public void update(Employee employee) {
-        employeeDAO.update(employee);
+    public void addEmployee(String name, String surname, String positionId, String departmentId, String managerId, String employmentDate) throws SQLException {
+        EmployeeDAOImpl managerEmpDAO = new EmployeeDAOImpl();
+        Employee manager = managerEmpDAO.get(Long.valueOf(managerId), false);
+
+        PositionDAOImpl positionDAO = new PositionDAOImpl();
+        Position position = positionDAO.get(Long.valueOf(positionId));
+
+        DepartmentDAOImpl departmentDAO = new DepartmentDAOImpl();
+        Department department = departmentDAO.get(Long.valueOf(departmentId));
+
+        Employee employee = new Employee(name, surname, position, department, manager, LocalDate.now());
+
+        EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl();
+        employeeDAO.save(employee);
     }
 
-    public void delete(int id) {
-        employeeDAO.remove(id);
+    public List<Employee> getEmployees() throws SQLException {
+        EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl();
+        return employeeDAO.getAll();
     }
 
+    public List<HierarchyEmployees> showHierarchy() throws SQLException {
+        EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl();
+        return employeeDAO.getHierarchyEmployees();
+    }
 }

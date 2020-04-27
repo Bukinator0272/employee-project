@@ -13,8 +13,9 @@ public class PoolConnectionBuilder implements ConnectionBuilder {
 
     public PoolConnectionBuilder() {
         try {
-            Context context = new InitialContext();
-            dataSource = (DataSource) context.lookup("java:comp/env/jdbc/register");
+            Context initContext = new InitialContext();
+            Context envContext = (Context) initContext.lookup("java:/comp/env");
+            dataSource = (DataSource) envContext.lookup("jdbc/myoracle");
         } catch (NamingException e) {
             e.printStackTrace();
         }
@@ -29,5 +30,4 @@ public class PoolConnectionBuilder implements ConnectionBuilder {
         }
         return null;
     }
-
 }

@@ -1,6 +1,3 @@
-<%@ page import="model.entity.Employee" %>
-<%@ page import="model.service.EmployeeService" %>
-<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -9,41 +6,50 @@
     <link rel="stylesheet" href="css/ViewEmployeesPageStyle.css" type="text/css"/>
     <meta charset="UTF-8">
 </head>
+
 <body>
 <div class="main">
-    <table class="table">
-        <caption><h1>Employees</h1></caption>
+
+    <a href="homePage.jsp" class="main__add">Home</a>
+    <a href="/show-hierarchy" class="main__add">Show hierarchy</a>
+
+    <table class="main__table">
         <tr>
             <th>Name</th>
             <th>Surname</th>
-            <th>Department</th>
             <th>Position</th>
+            <th>Department</th>
             <th>EmploymentDate</th>
             <th>Manager</th>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th>Show</th>
         </tr>
-        <%
-            EmployeeService employeeService = new EmployeeService();
-            List<Employee> employeeList = (List<Employee>) request.getAttribute("employees");
-            int i = 0;
-        %>
-        <%--@elvariable id="employees" type="java.util.List"--%>
         <c:forEach var="employee" items="${employees}">
             <tr>
                 <td>${employee.name}</td>
                 <td>${employee.surname}</td>
-                <td>${employee.department}</td>
-                <td>${employee.position}</td>
+                <td>${employee.position.name}</td>
+                <td>${employee.department.name}</td>
                 <td>${employee.employmentDate}</td>
+                <td>${employee.manager.name}${" "}${employee.manager.surname}</td>
+
                 <td>
-                    <%= employeeService.getManagersNameSurname(employeeList.get(i).getManager())%>
+                    <a href="edit-employee?id=${employee.id}">Edit</a>
                 </td>
-                <td><a href="edit-employee?id=${employee.id}">Edit</a></td>
-                <td><a href="delete-employee?id=${employee.id}">Delete</a></td>
-                <% i++; %>
+
+                <td>
+                    <a href="delete-employee?id=${employee.id}">Delete</a>
+                </td>
+
+                <td>
+                    <a href="show-employee?id=${employee.id}">Show</a>
+                </td>
+
             </tr>
         </c:forEach>
     </table>
-    <a href="add-employee" class="add">Add Employee</a>
+    <a href="add-employee" class="main__add">Add employee</a>
 </div>
 </body>
 </html>

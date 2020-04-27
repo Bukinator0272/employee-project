@@ -1,4 +1,4 @@
-package servlet;
+package servlet.servletEmployee;
 
 import controller.EmployeeController;
 
@@ -8,23 +8,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/delete-employee")
 public class DeleteEmployee extends HttpServlet {
 
-    private EmployeeController employeeController = new EmployeeController();
-
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.removeAttribute("employees");
-        employeeController.delete(Integer.parseInt(req.getParameter("id")));
-        resp.sendRedirect(req.getContextPath() + "/HomePage.jsp");
-        //getServletContext().getRequestDispatcher("/HomePage.jsp").forward(req, resp);
+        EmployeeController employeeController = new EmployeeController();
+        try {
+            employeeController.removeEmployee(Long.valueOf(req.getParameter("id")));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        resp.sendRedirect(req.getContextPath() + "/view-employees");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPost(req, resp);
     }
-
 }
