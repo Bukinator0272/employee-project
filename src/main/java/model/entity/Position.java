@@ -12,6 +12,9 @@ public class Position {
         this.name = name;
     }
 
+    public Position() {
+    }
+
     public Position(String name) {
         this.name = name;
     }
@@ -31,6 +34,7 @@ public class Position {
     public void setName(String name) {
         this.name = name;
     }
+
 
     public String getStringID() {
         return Long.toString(id);

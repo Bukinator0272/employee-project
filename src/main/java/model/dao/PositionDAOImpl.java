@@ -16,6 +16,17 @@ public class PositionDAOImpl {
         this.executor = new Executor();
     }
 
+    private boolean isExist(Position position) throws SQLException {
+        if (position == null || position.getId() == null)
+            return false;
+        executor = new Executor();
+        return existById(position.getId());
+    }
+
+    private boolean existById(Long id) throws SQLException {
+        return executor.execQuery(result -> result.next(), "select * from position where id = ? ", id.toString());
+    }
+
     public Position get(Long id) throws SQLException {
         return executor.execQuery(result -> {
             if (!result.next())
@@ -48,5 +59,15 @@ public class PositionDAOImpl {
 
     public void insert(Position position) throws SQLException {
         executor.execUpdate("insert into position (id, name) values (POSITION_SEQUENCE.nextval,?)", position.getName());
+    }
+
+    public void save(Position position) throws SQLException {
+        if (isExist(position)) {
+            executor = new Executor();
+            update(position);
+        } else {
+            executor = new Executor();
+            insert(position);
+        }
     }
 }

@@ -23,6 +23,7 @@ public class EmployeeDAOImpl {
     private boolean isExist(Employee employee) throws SQLException {
         if (employee == null || employee.getId() == null)
             return false;
+        executor = new Executor();
         return existById(employee.getId());
     }
 
@@ -109,8 +110,6 @@ public class EmployeeDAOImpl {
             return hierarchy;
         });
     }
-
-
 
     public void delete(Long id) throws SQLException {
         executor.execUpdate("delete from employees where id=?", id.toString());

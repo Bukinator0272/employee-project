@@ -1,5 +1,13 @@
 package model.entity;
 
+import model.ejb.adapters.DepartmentAdapter;
+import model.ejb.adapters.LocalDateAdapter;
+import model.ejb.adapters.ManagerAdapter;
+import model.ejb.adapters.PositionAdapter;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.beans.Transient;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -66,6 +74,7 @@ public class Employee {
         this.surname = surname;
     }
 
+    @XmlJavaTypeAdapter(value = DepartmentAdapter.class)
     public Department getDepartment() {
         return department;
     }
@@ -74,6 +83,7 @@ public class Employee {
         this.department = department;
     }
 
+    @XmlJavaTypeAdapter(value = PositionAdapter.class)
     public Position getPosition() {
         return position;
     }
@@ -82,6 +92,8 @@ public class Employee {
         this.position = position;
     }
 
+    @XmlElement(name = "manager")
+    @XmlJavaTypeAdapter(value = ManagerAdapter.class)
     public Employee getManager() {
         return manager;
     }
@@ -90,6 +102,7 @@ public class Employee {
         this.manager = manager;
     }
 
+    @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
     public LocalDate getEmploymentDate() {
         return employmentDate;
     }
@@ -98,6 +111,7 @@ public class Employee {
         this.employmentDate = employmentDate;
     }
 
+    @Transient
     public String getStringID() {
         return Long.toString(id);
     }
@@ -115,4 +129,3 @@ public class Employee {
         return Objects.hash(id);
     }
 }
-

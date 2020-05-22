@@ -2,6 +2,7 @@ package model.dao;
 
 import model.dao.constant.EmployeesNC;
 import model.entity.Department;
+import model.entity.Employee;
 import model.executor.Executor;
 
 import java.sql.SQLException;
@@ -19,6 +20,7 @@ public class DepartmentDAOImpl {
     private boolean isExist(Department department) throws SQLException {
         if (department == null || department.getId() == null)
             return false;
+        executor = new Executor();
         return existById(department.getId());
     }
 
@@ -58,6 +60,16 @@ public class DepartmentDAOImpl {
 
     public void insert(Department department) throws SQLException {
         executor.execUpdate("insert into department (id, name) values (DEPARTMENT_SEQUENCE.nextval,?)", department.getName());
+    }
+
+    public void save(Department department) throws SQLException {
+        if (isExist(department)) {
+            executor = new Executor();
+            update(department);
+        } else {
+            executor = new Executor();
+            insert(department);
+        }
     }
 }
 
