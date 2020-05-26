@@ -17,7 +17,8 @@ public class DeleteDepartment extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.removeAttribute("departments");
         DepartmentController departmentController = new DepartmentController();
-
+        
+        // в этом случае добавление пробела перед блоком лишнее
         try {
             departmentController.removeDepartment(Long.valueOf(req.getParameter("id")));
         } catch (SQLException e) {
