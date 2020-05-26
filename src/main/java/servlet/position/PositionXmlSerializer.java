@@ -52,6 +52,7 @@ public class PositionXmlSerializer extends HttpServlet {
                 positionDAO.save(position);
             }
 
+            // пробел не нужен
             System.out.println(positions.size());
         } catch (JAXBException | SQLException e) {
             e.printStackTrace();
