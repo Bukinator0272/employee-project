@@ -18,6 +18,7 @@ public class DeleteEmployee extends HttpServlet {
         req.removeAttribute("employees");
         EmployeeController employeeController = new EmployeeController();
         try {
+            // что будет, если req.getParameter("id") - null, возможно стоит добавить проверку?
             employeeController.removeEmployee(Long.valueOf(req.getParameter("id")));
         } catch (SQLException e) {
             e.printStackTrace();
