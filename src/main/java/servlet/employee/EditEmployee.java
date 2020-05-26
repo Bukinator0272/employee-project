@@ -60,6 +60,7 @@ public class EditEmployee extends HttpServlet {
         getServletContext().getRequestDispatcher("/edit_employee.jsp").forward(req, resp);
     }
 
+    // громоздкий метод, в котором решается много задач, лучше разбить
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String newName = req.getParameter("name");
