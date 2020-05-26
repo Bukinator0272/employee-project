@@ -24,7 +24,9 @@ public class DepartmentDAOImpl {
         return existById(department.getId());
     }
 
+    // метод с возвращаемым значением boolean именовать надо, начиная с is, как в методе выше
     private boolean existById(Long id) throws SQLException {
+        // запросы надо сохранить в переменные, тем более некоторые используются неоднократно
         return executor.execQuery(result -> result.next(), "select * from department where id = ? ", id.toString());
     }
 
